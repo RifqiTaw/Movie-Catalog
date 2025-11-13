@@ -3,11 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   css: ["@/assets/css/tailwind.css"],
-  modules: [
-    "@nuxtjs/tailwindcss",
-    "@pinia/nuxt",
-    "pinia-plugin-persistedstate/nuxt",
-  ],
+  modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "@nuxt/image"],
   typescript: {
     strict: true,
   },
