@@ -1,6 +1,12 @@
+<script setup lang="ts">
+import MovieCard from "./MovieCard.vue";
+defineProps<{ movies: any[] }>();
+</script>
+
 <template>
   <div
     class="flex overflow-x-auto gap-4 px-6 pb-4 scrollbar-hide snap-x snap-mandatory"
+    aria-label="Movie list"
   >
     <div
       v-for="movie in movies"
@@ -11,11 +17,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import MovieCard from "./MovieCard.vue";
-defineProps<{ movies: any[] }>();
-</script>
 
 <style scoped>
 .scrollbar-hide::-webkit-scrollbar {
