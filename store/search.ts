@@ -1,15 +1,16 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
 
-export const useSearchStore = defineStore('search', {
+export const useSearchStore = defineStore("search", {
   state: () => ({
-    query: '',
+    query: "" as string,
   }),
+
   actions: {
     setQuery(q: string) {
-      this.query = q
+      this.query = q;
     },
     clear() {
-      this.query = ''
+      this.query = "";
     },
   },
-})
+});
