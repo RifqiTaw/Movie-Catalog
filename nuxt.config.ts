@@ -25,14 +25,4 @@ export default defineNuxtConfig({
       tmdbApiKey: process.env.NUXT_PUBLIC_TMDB_KEY,
     },
   },
-  nitro: {
-    routeRules: {
-      "/api/tmdb/**": {
-        cache: {
-          swr: true,
-          maxAge: 300,
-        },
-      },
-    },
-  },
 });

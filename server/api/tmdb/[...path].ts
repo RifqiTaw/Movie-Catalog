@@ -1,5 +1,5 @@
 export default defineEventHandler(async (event) => {
-  setHeader(event, "Cache-Control", "s-maxage=300, stale-while-revalidate=60");
+  setHeader(event, "Cache-Control", "no-store");
 
   const config = useRuntimeConfig();
   const token = config.tmdbReadToken as string;
