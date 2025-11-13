@@ -5,15 +5,35 @@ import SectionTitle from "~/components/ui/SectionTitle.vue";
 import Loader from "~/components/common/Loader.vue";
 import { useSearchStore } from "~/store/search";
 import { useWatchlistStore } from "~/store/watchlist";
+import type { TMDBMovie, TMDBResponse, TMDBTvShow } from "~/types/tmdb";
 
 const { popular, topRated, nowPlaying, upcoming } = useMovies();
 
 const store = useSearchStore();
 const watchlist = useWatchlistStore();
 
-const search = computed(() => {
-  return store.query ? useSearchMovies(store.query) : null;
-});
+const searchResults = ref<TMDBResponse<TMDBMovie | TMDBTvShow> | null>(null);
+const searchPending = ref<boolean>(false);
+
+watch(
+  () => store.query,
+  async (q) => {
+    if (!q) {
+      searchResults.value = null;
+      return;
+    }
+
+    searchPending.value = true;
+    const { data, pending } = useSearchMovies(q);
+    watchEffect(() => {
+      if (data.value) {
+        searchResults.value = data.value;
+        searchPending.value = pending.value;
+      }
+    });
+  },
+  { immediate: true }
+);
 
 const showPopular = ref<boolean>(false);
 const showTopRated = ref<boolean>(false);
@@ -37,15 +57,15 @@ onMounted(() => {
       </div>
     </section>
 
-    <section v-if="store.query && search">
+    <section v-if="store.query">
       <SectionTitle
         :title="`Search results for '${store.query}'`"
         icon="mdi:search"
       />
 
       <div class="mt-4 min-h-[12rem] flex justify-center items-center">
-        <Loader v-if="search.pending?.value" />
-        <MovieList v-else :movies="search.data.value?.results || []" />
+        <Loader v-if="searchPending" />
+        <MovieList v-else :movies="searchResults?.results || []" />
       </div>
     </section>
 
