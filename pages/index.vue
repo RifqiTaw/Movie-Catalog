@@ -14,47 +14,92 @@ const watchlist = useWatchlistStore();
 const search = computed(() => {
   return store.query ? useSearchMovies(store.query) : null;
 });
+
+const showPopular = ref<boolean>(false);
+const showTopRated = ref<boolean>(false);
+const showNowPlaying = ref<boolean>(false);
+const showUpcoming = ref<boolean>(false);
+
+onMounted(() => {
+  setTimeout(() => (showPopular.value = true), 100);
+  setTimeout(() => (showTopRated.value = true), 200);
+  setTimeout(() => (showNowPlaying.value = true), 300);
+  setTimeout(() => (showUpcoming.value = true), 400);
+});
 </script>
 
 <template>
   <main class="space-y-12 py-10">
     <section v-if="watchlist.items.length">
       <SectionTitle title="Your Watchlist" icon="mdi:bookmark" />
-      <MovieList :movies="watchlist.items" />
+      <div class="mt-4">
+        <MovieList :movies="watchlist.items" />
+      </div>
     </section>
 
-    <div v-if="store.query && search">
+    <section v-if="store.query && search">
       <SectionTitle
         :title="`Search results for '${store.query}'`"
         icon="mdi:search"
       />
-      <MovieList :movies="search.data.value?.results || []" />
-    </div>
 
-    <div v-else>
+      <div class="mt-4 min-h-[12rem] flex justify-center items-center">
+        <Loader v-if="search.pending?.value" />
+        <MovieList v-else :movies="search.data.value?.results || []" />
+      </div>
+    </section>
+
+    <template v-else>
       <section>
         <SectionTitle title="Popular Movies" icon="mdi:fire" />
-        <MovieList :movies="popular.data.value?.results || []" />
-        <Loader v-if="popular.pending.value" />
+        <transition name="fade" mode="out-in">
+          <div v-if="showPopular" class="mt-4">
+            <MovieList :movies="popular.data.value?.results || []" />
+          </div>
+          <Loader v-else class="h-40 mt-6" />
+        </transition>
       </section>
 
       <section>
         <SectionTitle title="Top Rated" icon="mdi:star" />
-        <MovieList :movies="topRated.data.value?.results || []" />
-        <Loader v-if="topRated.pending.value" />
+        <transition name="fade" mode="out-in">
+          <div v-if="showTopRated" class="mt-4">
+            <MovieList :movies="topRated.data.value?.results || []" />
+          </div>
+          <Loader v-else class="h-40 mt-6" />
+        </transition>
       </section>
 
       <section>
         <SectionTitle title="Now Playing" icon="mdi:movie-open" />
-        <MovieList :movies="nowPlaying.data.value?.results || []" />
-        <Loader v-if="nowPlaying.pending.value" />
+        <transition name="fade" mode="out-in">
+          <div v-if="showNowPlaying" class="mt-4">
+            <MovieList :movies="nowPlaying.data.value?.results || []" />
+          </div>
+          <Loader v-else class="h-40 mt-6" />
+        </transition>
       </section>
 
       <section>
         <SectionTitle title="Upcoming Movies" icon="mdi:calendar-month" />
-        <MovieList :movies="upcoming.data.value?.results || []" />
-        <Loader v-if="upcoming.pending.value" />
+        <transition name="fade" mode="out-in">
+          <div v-if="showUpcoming" class="mt-4">
+            <MovieList :movies="upcoming.data.value?.results || []" />
+          </div>
+          <Loader v-else class="h-40 mt-6" />
+        </transition>
       </section>
-    </div>
+    </template>
   </main>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.6s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
