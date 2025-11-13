@@ -20,7 +20,7 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
-    tmdbReadToken: process.env.NUXT_PRIVATE_TMDB_READ_TOKEN_KEY,
+    tmdbReadToken: process.env.NUXT_TMDB_READ_TOKEN_KEY,
     public: {
       tmdbApiKey: process.env.NUXT_PUBLIC_TMDB_KEY,
     },
