@@ -4,6 +4,13 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const token = config.tmdbReadToken as string;
 
+  if (!token) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Missing TMDB_READ_TOKEN in environment variables",
+    });
+  }
+
   const rawPath = event.context.params?.path;
   const path = Array.isArray(rawPath) ? rawPath.join("/") : rawPath || "";
 
