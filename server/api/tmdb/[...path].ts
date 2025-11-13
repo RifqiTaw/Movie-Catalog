@@ -1,4 +1,6 @@
 export default defineEventHandler(async (event) => {
+  setHeader(event, "Cache-Control", "s-maxage=300, stale-while-revalidate=60");
+
   const config = useRuntimeConfig();
   const token = config.tmdbReadToken as string;
 
@@ -9,7 +11,7 @@ export default defineEventHandler(async (event) => {
 
   const url = `https://api.themoviedb.org/3/${path}?${new URLSearchParams(
     query as any
-  )}`;  
+  )}`;
   const data = await $fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
