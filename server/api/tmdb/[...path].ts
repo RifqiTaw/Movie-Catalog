@@ -16,13 +16,14 @@ export default defineEventHandler(async (event) => {
 
   const query = getQuery(event);
 
-  const url = `https://api.themoviedb.org/3/${path}?${new URLSearchParams(
-    query as any
-  )}`;
+  const url = `https://api.themoviedb.org/3/${path}`;
+
   const data = await $fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    params: query,
   });
+
   return data;
 });
